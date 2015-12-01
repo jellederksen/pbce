@@ -1,6 +1,6 @@
 !/bin/bash
 #
-#ssh execute script remote
+#ssh script remote execute
 #
 #Execute a local script on multiple systems with the use of ssh.
 #You can specify the script you want to execute on the remote system
