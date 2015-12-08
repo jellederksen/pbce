@@ -13,8 +13,13 @@
 
 sysctl_conf='/etc/sysctl.conf'
 
-sysctl_setting[0]='net.ipv4.conf.all.forwarding = 0'
+sysctl_setting[0]='net.ipv4.conf.all.forwarding = 1'
 sysctl_setting[1]='net.ipv4.conf.all.forwarding = 0'
+
+if [[ ! "$USER" = root ]]; then
+	echo 'need root privileges'
+	exit 1
+fi
 
 if [ ! -f "$sysctl_conf" ]; then
         echo "sysctl $sysctl_conf missing"
@@ -30,7 +35,7 @@ for s in "${sysctl_setting[@]}"; do
 	else
 		if ! sed -i "s/$conf/$s/" "$sysctl_conf"; then
 			echo "failed to change $sysctl_conf"
-			exit 1
+			exit 2
 		else
 			echo "$sysctl_conf changed"
 		fi
