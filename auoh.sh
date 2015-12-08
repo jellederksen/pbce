@@ -25,20 +25,20 @@ for user in "${users[@]}"; do
 	s="$(echo $user | awk -F, '{print $4}')"
 	a="$(echo $user | awk -F, '{print $5}')"
 	if [[ -z $g || -z $n || -z $h || -z $s || -z $a ]]; then
-		echo "$user variable incorrect"
+		echo "$user variable incorrect."
 		exit 1
 	fi
 	if id "$account" > /dev/null 2>&1; then
-		echo "$account already on $(hostname)"
+		echo "$account already on $(hostname)."
 		continue
 	fi
 	if useradd -g "$g" -c "$n" -d "$h" -s "$s" "$a"; then
-		echo "$account added on host $(hostname)"
+		echo "$account added on host $(hostname)."
 	else
-		echo "failed to add $account on host $(hostname)"
+		echo "Failed to add $account on host $(hostname)."
 		exit 2
 	fi
 done
 
-echo "all accounts added on host $(hostname)"
+echo "All accounts added on host $(hostname)."
 exit 0
