@@ -17,6 +17,11 @@
 #Example
 #'group_name,full_name,home_directory,prefered_shell,account_name'
 
+if [[ ! "$USER" = root ]]; then
+	echo 'need root privileges'
+	exit 1
+fi
+
 users[0]="jelle,'Jelle Derksen',/home/jelle,/bin/ksh,jelle"
 
 for user in "${users[@]}"; do
@@ -27,7 +32,7 @@ for user in "${users[@]}"; do
 	a="$(echo $user | awk -F, '{print $5}')"
 	if [[ -z $g || -z $n || -z $h || -z $s || -z $a ]]; then
 		echo "$user variable incorrect."
-		exit 1
+		exit 2
 	fi
 	if id "$account" > /dev/null 2>&1; then
 		echo "$account already on $(hostname)."
@@ -37,7 +42,7 @@ for user in "${users[@]}"; do
 		echo "$account added on host $(hostname)."
 	else
 		echo "Failed to add $account on host $(hostname)."
-		exit 2
+		exit 3
 	fi
 done
 
