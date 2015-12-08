@@ -38,3 +38,6 @@ for remote_host in "${remote_hosts[@]}"; do
 		exit 1
 	fi
 done
+
+echo "Done executing script on all hosts."
+exit 0
