@@ -16,7 +16,8 @@
 
 #Example
 #'group_name,full_name,home_directory,prefered_shell,account_name'
-#users[0]="jelle,'Jelle Derksen',/home/jelle,/bin/ksh,jelle"
+
+users[0]="jelle,'Jelle Derksen',/home/jelle,/bin/ksh,jelle"
 
 for user in "${users[@]}"; do
 	g="$(echo $user | awk -F, '{print $1}')"
