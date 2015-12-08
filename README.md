@@ -1,2 +1,2 @@
 # pbce
-Poor Basterds command executer
+Poor Basterds Command Executer
