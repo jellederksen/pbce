@@ -13,8 +13,8 @@
 
 sysctl_conf='/etc/sysctl.conf'
 
-sysctl_setting[0]='net.ipv4.conf.all.forwarding = 1'
-sysctl_setting[1]='net.ipv4.conf.all.forwarding = 0'
+sysctl_setting[0]='net.ipv4.conf.all.forwarding = 0'
+sysctl_setting[1]='net.ipv4.conf.all.forwarding = 1'
 
 if [[ ! "$USER" = root ]]; then
 	echo 'need root privileges'
