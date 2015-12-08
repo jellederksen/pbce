@@ -23,7 +23,7 @@ fi
 
 if [ ! -f "$sysctl_conf" ]; then
         echo "sysctl $sysctl_conf missing"
-        exit 1
+        exit 2
 fi
 
 for s in "${sysctl_setting[@]}"; do
@@ -35,7 +35,7 @@ for s in "${sysctl_setting[@]}"; do
 	else
 		if ! sed -i "s/$conf/$s/" "$sysctl_conf"; then
 			echo "failed to change $sysctl_conf"
-			exit 2
+			exit 3
 		else
 			echo "$sysctl_conf changed"
 		fi
@@ -49,6 +49,7 @@ for s in "${sysctl_setting[@]}"; do
 			echo "activated $s"
 		else
 			echo "failed to activate $s"
+			exit 4
 		fi
 	fi
 done
