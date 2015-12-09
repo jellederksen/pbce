@@ -24,8 +24,9 @@
 #exclude_element_on_host='192.16.0.3,users,0'
 
 #Script settings change to suit your needs.
+exclude_host[0]=''
+exclude_element_on_host[0]=''
 sysctl_setting[0]=''
-exclude_hosts[0]=''
 sysctl_conf='/etc/sysctl.conf'
 
 #Do not edit below this point.
@@ -40,8 +41,8 @@ if [[ ! "$(uname)" = 'Linux' ]]; then
 	exit 2
 fi
 
-if [[ -n "$exclude_hosts" ]]; then
-	for x in "${exclude_hosts[@]}"; do
+if [[ -n "$exclude_host" ]]; then
+	for x in "${exclude_host[@]}"; do
 		h="$(echo "$x" | awk -F, '{print $1}')"
 		if [[ "$h" = "$(hostname)" ]]; then
 			exit 0
