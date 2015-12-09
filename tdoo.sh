@@ -19,7 +19,7 @@
 
 daemons[0]='exim4,off'
 
-if [[ ! "$USER" = root ]]; then
+if [[ ! "$USER" = 'root' ]]; then
 	echo 'Need root privileges.'
 	exit 1
 fi
@@ -31,7 +31,7 @@ if [[ -x $(which update-rc.d) ]]; then
 		#action enable or disable
 		y="$(echo "$d" | awk -F, '{print $2}' | \
 		sed -e 's/on/enable/' -e 's/off/disable/')"
-		if [[ ! -f /etc/init.d/$x ]]; then
+		if [[ ! -f "/etc/init.d/$x" ]]; then
 			echo "Init script $x missing."
 			exit 1
 		fi
@@ -39,11 +39,11 @@ if [[ -x $(which update-rc.d) ]]; then
 			echo "${y}d ${x}."
 			continue
 		else
-			echo "failed to $x ${y}."
+			echo "Failed to $x ${y}."
 			exit 2
 		fi
 	done
-elif [[ -x $(which chkconfig) ]]; then
+elif [[ -x "$(which chkconfig)" ]]; then
 	for d in "${daemons[@]}"; do
 		#name of init script
 		x="$(echo "$d" | awk -F, '{print $1}')"
