@@ -103,4 +103,5 @@ for s in "${sysctl_setting[@]}"; do
 	fi
 done
 
+echo "All sysctl settings have the correct value on $(hostname)"
 exit 0
