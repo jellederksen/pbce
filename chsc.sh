@@ -16,21 +16,21 @@ sysctl_conf='/etc/sysctl.conf'
 sysctl_setting[0]='net.ipv4.conf.all.forwarding = 0'
 sysctl_setting[1]='net.ipv4.conf.all.forwarding = 1'
 
-if [[ ! "$USER" = root ]]; then
+if [[ ! "$USER" = 'root' ]]; then
 	echo 'need root privileges'
 	exit 1
 fi
 
-if [ ! -f "$sysctl_conf" ]; then
+if [[ ! -f "$sysctl_conf" ]]; then
         echo "sysctl $sysctl_conf missing"
         exit 2
 fi
 
 for s in "${sysctl_setting[@]}"; do
 	conf="$(< "$sysctl_conf" grep "${s%% = [0-1]}")"
-	if [[ $conf = $s ]]; then
+	if [[ "$conf" = "$s" ]]; then
 		echo "sysctl setting $s correct in $sysctl_conf"
-	elif [[ -z $conf ]]; then
+	elif [[ -z "$conf" ]]; then
 		echo "$s" >> "$sysctl_conf"
 	else
 		if ! sed -i "s/$conf/$s/" "$sysctl_conf"; then
@@ -41,7 +41,7 @@ for s in "${sysctl_setting[@]}"; do
 		fi
 	fi
 	live="$(sysctl "${s%% = [0-1]}")"
-	if [[ $live = $s ]]; then
+	if [[ "$live" = "$s" ]]; then
 		echo "sysctl setting $s correct state active"
 	else
 		s="$(echo "$s" | sed 's/ //g')"
