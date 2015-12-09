@@ -8,6 +8,7 @@
 #
 #Example
 #sysctl_setting[0]='net.ipv4.conf.all.forwarding = 0'
+#sysctl_setting[1]='net.ipv4.conf.all.forwarding = 1'
 #
 #Copyright 2015 Jelle Derksen GNU GPL V3
 #Author Jelle Derksen
