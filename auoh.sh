@@ -27,6 +27,7 @@ users[0]=""
 exclude_hosts[0]=''
 
 #Do not edit below this point.
+#Script checks.
 if [[ ! "$USER" = 'root' ]]; then
 	echo 'need root privileges'
 	exit 1
@@ -45,6 +46,7 @@ for host in "${exclude_hosts[@]}"; do
 	fi
 done
 
+#Main code.
 for user in "${users[@]}"; do
 	g="$(echo $user | awk -F, '{print $1}')"
 	n="$(echo $user | awk -F, '{print $2}')"
