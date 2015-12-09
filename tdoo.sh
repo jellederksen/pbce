@@ -8,17 +8,19 @@
 #the desired state on the host this script is executed on. You can execte
 #this script on multiple systems using the ssre.sh script.
 #
-#Copyright 2016 Jelle Derksen
+#Example
+#daemons[0]='sshd,on'
+#daemons[0]='telnetd,off'
+#
+#Copyright 2015 Jelle Derksen GNU GPL V3
 #Author Jelle Derksen
 #Contact jelled@jellederksen.nl
 #Website www.jellederksen.nl
 
-#Example
-#daemons[0]='sshd,on'
-#daemons[0]='telnetd,off'
-
+#Script settings change to suit your needs.
 daemons[0]='exim4,off'
 
+#Do not edit below this point.
 if [[ ! "$USER" = 'root' ]]; then
 	echo 'Need root privileges.'
 	exit 1
