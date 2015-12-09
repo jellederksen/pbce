@@ -14,10 +14,6 @@
 #the quotes arround the full_name part. You will need the quotes when
 #using a space between the first and last name.
 #
-#Example: add user accounts.
-#users[0]="group_name,full_name,'home_directory',prefered_shell,account_name"
-#users[1]="jelle,'Jelle Derksen',/home/jelle,/bin/ksh,jelle"
-#
 #Example: exclude host from script.
 #exclude_hosts[0]='foo.bar.com'
 #exclude_hosts[1]='192.168.0.1'
@@ -25,11 +21,15 @@
 #Example: exclude element on host from script.
 #exclude_element_on_host='foo.bar.com,users,1'
 #exclude_element_on_host='192.16.0.3,users,0'
+#
+#Example: add user accounts.
+#users[0]="group_name,full_name,'home_directory',prefered_shell,account_name"
+#users[1]="jelle,'Jelle Derksen',/home/jelle,/bin/ksh,jelle"
 
 #Script settings change to suit your needs.
-users[0]="jelle,'Jelle Derksen',/home/jelle,/bin/ksh,jelle"
-exclude_hosts[0]=''
+exclude_host[0]=''
 exclude_element_on_host[0]=''
+users[0]="jelle,'Jelle Derksen',/home/jelle,/bin/ksh,jelle"
 
 #Do not edit below this point.
 #Script checks.
@@ -43,8 +43,8 @@ if [[ ! "$(uname)" = 'Linux' ]]; then
 	exit 2
 fi
 
-if [[ -n "$exclude_hosts" ]]; then
-	for x in "${exclude_hosts[@]}"; do
+if [[ -n "$exclude_host" ]]; then
+	for x in "${exclude_host[@]}"; do
 		h="$(echo "$x" | awk -F, '{print $1}')"
 		if [[ "$h" = "$(hostname)" ]]; then
 			exit 0
