@@ -69,4 +69,5 @@ fi
 
 #Perform actions with elements in array_change.
 
+echo "done making changes on $(hostname)"
 exit 0
