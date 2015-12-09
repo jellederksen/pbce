@@ -2,18 +2,22 @@
 #
 #Change Sysctl On Host
 #
-#Change sysctl setting on the host this script is executed on. You can execute
-#this script on multiple hosts with the use of the ssre.sh script. Please add
-#all sysctl settings you want to change to the "${sysctl_setting[@]}" array.
-#
-#Example
-#sysctl_setting[0]='net.ipv4.conf.all.forwarding = 0'
-#sysctl_setting[1]='net.ipv4.conf.all.forwarding = 1'
-#
 #Copyright 2015 Jelle Derksen GNU GPL V3
 #Author Jelle Derksen
 #Contact jelled@jellederksen.nl
 #Website www.jellederksen.nl
+#
+#Change sysctl setting on the host this script is executed on. You can execute
+#this script on multiple hosts with the use of the ssre.sh script. Please add
+#all sysctl settings you want to change to the "${sysctl_setting[@]}" array.
+#
+#Example change or add sysctl settings
+#sysctl_setting[0]='net.ipv4.conf.all.forwarding = 0'
+#sysctl_setting[1]='net.ipv4.conf.all.forwarding = 1'
+#
+#Example exclude host from script
+#exclude_hosts[0]='foo.bar.com'
+#exclude_hosts[1]='192.168.0.1'
 
 #Script settings change to suit your needs.
 sysctl_setting[0]='net.ipv4.conf.all.forwarding = 0'
