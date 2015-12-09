@@ -22,7 +22,7 @@ remote_hosts[2]='192.168.0.3'
 remote_hosts[3]='192.168.0.4'
 remote_hosts[4]='192.168.0.5'
 
-if [ ! -r "$1" ]; then
+if [[ ! -r "$1" ]]; then
         echo "Enter the script name you want to execute." >&2
         exit 1
 else
@@ -33,7 +33,7 @@ for remote_host in "${remote_hosts[@]}"; do
 	echo "Ssh to $remote_host and executing script $1."
 	ssh -o StrictHostKeyChecking=no "$ssh_user@$remote_host" \
 "echo $base64_script | base64 -d | sudo bash"
-	if [ ! "$?" -eq 0 ]; then
+	if [[ ! "$?" -eq '0' ]]; then
 		echo "Someting went wrong on the host $slacrr_host."
 		exit 1
 	fi
