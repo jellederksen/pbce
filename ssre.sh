@@ -26,8 +26,8 @@
 # root # ./ssre.sh <script_you_want_to_execute_remote.sh>
 
 #Script settings change to suit your needs.
-ssh_user=''
 remote_hosts[0]=''
+ssh_user=''
 
 #Do not edit below this point.
 if [[ ! -r "$1" ]]; then
