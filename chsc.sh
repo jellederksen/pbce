@@ -69,6 +69,7 @@ if [[ ! -f "$sysctl_conf" ]]; then
         exit 2
 fi
 
+#Main code.
 for s in "${sysctl_setting[@]}"; do
 	conf="$(< "$sysctl_conf" grep "${s%% = [0-1]}")"
 	if [[ "$conf" = "$s" ]]; then
