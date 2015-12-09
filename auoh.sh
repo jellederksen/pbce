@@ -29,7 +29,7 @@
 #Script settings change to suit your needs.
 exclude_host[0]=''
 exclude_element_on_host[0]=''
-users[0]="jelle,'Jelle Derksen',/home/jelle,/bin/ksh,jelle"
+user[0]="jelle,'Jelle Derksen',/home/jelle,/bin/ksh,jelle"
 
 #Do not edit below this point.
 #Script checks.
@@ -72,24 +72,24 @@ if [[ -n "$exclude_element_on_host" ]]; then
 fi
 
 #Main code.
-for user in "${users[@]}"; do
-	g="$(echo $user | awk -F, '{print $1}')"
-	n="$(echo $user | awk -F, '{print $2}')"
-	h="$(echo $user | awk -F, '{print $3}')"
-	s="$(echo $user | awk -F, '{print $4}')"
-	a="$(echo $user | awk -F, '{print $5}')"
+for u in "${user[@]}"; do
+	g="$(echo $u | awk -F, '{print $1}')"
+	n="$(echo $u | awk -F, '{print $2}')"
+	h="$(echo $u | awk -F, '{print $3}')"
+	s="$(echo $u | awk -F, '{print $4}')"
+	a="$(echo $u | awk -F, '{print $5}')"
 	if [[ -z "$g" || -z "$n" || -z "$h" || -z "$s" || -z "$a" ]]; then
-		echo "$user variable incorrect."
+		echo "$u variable incorrect."
 		exit 4
 	fi
-	if id "$account" > /dev/null 2>&1; then
-		echo "$account already on $(hostname)."
+	if id "$a" > /dev/null 2>&1; then
+		echo "$a already on $(hostname)."
 		continue
 	fi
 	if useradd -g "$g" -c "$n" -d "$h" -s "$s" "$a"; then
-		echo "$account added on host $(hostname)."
+		echo "$a added on host $(hostname)."
 	else
-		echo "Failed to add $account on host $(hostname)."
+		echo "Failed to add $a on host $(hostname)."
 		exit 5
 	fi
 done
