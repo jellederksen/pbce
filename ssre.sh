@@ -19,16 +19,15 @@
 #remote_hosts[3]='192.168.0.4'
 #remote_hosts[4]='192.168.0.5'
 #
+#Example: set username for ssh login
+#ssh_user='systemadmin'
+#
 #Example: execute script on remote hosts.
 # root # ./ssre.sh <script_you_want_to_execute_remote.sh>
 
 #Script settings change to suit your needs.
-ssh_user='systemadmin'
-remote_hosts[0]='192.168.0.1'
-remote_hosts[1]='192.168.0.2'
-remote_hosts[2]='192.168.0.3'
-remote_hosts[3]='192.168.0.4'
-remote_hosts[4]='192.168.0.5'
+ssh_user=''
+remote_hosts[0]=''
 
 #Do not edit below this point.
 if [[ ! -r "$1" ]]; then
