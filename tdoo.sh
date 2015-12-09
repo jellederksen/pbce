@@ -12,22 +12,23 @@
 #look for the command line tool "update-rc.d" or "chkconfig" to configure
 #the desired state on the host this script is executed on. You can execte
 #this script on multiple systems using the ssre.sh script.
-#
-#Example: turn daemons on or off at boot time.
-#daemons[0]='sshd,on'
-#daemons[0]='telnetd,off'
-#
+
 #Example: exclude host from script.
-#exclude_hosts[0]='foo.bar.com'
-#exclude_hosts[1]='192.168.0.1'
+#exclude_host[0]='foo.bar.com'
+#exclude_host[1]='192.168.0.1'
 #
 #Example: exclude element on host from script.
 #exclude_element_on_host='foo.bar.com,users,1'
 #exclude_element_on_host='192.16.0.3,users,0'
+#
+#Example: turn daemons on or off at boot time.
+#daemon[0]='sshd,on'
+#daemon[0]='telnetd,off'
 
 #Script settings change to suit your needs.
-daemons[0]=''
-exclude_hosts[0]=''
+exclude_host[0]=''
+exclude_element_on_host[0]=''
+daemon[0]=''
 
 #Do not edit below this point.
 #Script checks.
@@ -41,8 +42,8 @@ if [[ ! "$(uname)" = 'Linux' ]]; then
 	exit 2
 fi
 
-if [[ -n "$exclude_hosts" ]]; then
-	for x in "${exclude_hosts[@]}"; do
+if [[ -n "$exclude_host" ]]; then
+	for x in "${exclude_host[@]}"; do
 		h="$(echo "$x" | awk -F, '{print $1}')"
 		if [[ "$h" = "$(hostname)" ]]; then
 			exit 0
@@ -71,7 +72,7 @@ fi
 
 #Main code.
 if [[ -x $(which update-rc.d) ]]; then
-	for d in "${daemons[@]}"; do
+	for d in "${daemon[@]}"; do
 		#name of init script
 		x="$(echo "$d" | awk -F, '{print $1}')"
 		#action enable or disable
@@ -90,7 +91,7 @@ if [[ -x $(which update-rc.d) ]]; then
 		fi
 	done
 elif [[ -x "$(which chkconfig)" ]]; then
-	for d in "${daemons[@]}"; do
+	for d in "${daemon[@]}"; do
 		#name of init script
 		x="$(echo "$d" | awk -F, '{print $1}')"
 		#action on or off
