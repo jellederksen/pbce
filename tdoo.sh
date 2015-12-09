@@ -22,9 +22,22 @@ daemons[0]='exim4,off'
 
 #Do not edit below this point.
 if [[ ! "$USER" = 'root' ]]; then
-	echo 'Need root privileges.'
+	echo 'need root privileges'
 	exit 1
 fi
+
+if [[ ! "$(uname)" = 'Linux' ]]; then
+	echo 'OS not Linux.'
+	exit 1
+fi
+
+for host in "${exclude_hosts[@]}"; do
+	if [[ "$host" = "$(hostname)" ]]; then
+		exit 0
+	elif [[ "$host" = "$(ip addr show | grep -F -o "$host")" ]]; then
+		exit 0
+	fi
+done
 
 if [[ -x $(which update-rc.d) ]]; then
 	for d in "${daemons[@]}"; do
