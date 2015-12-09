@@ -7,14 +7,15 @@
 #first parameter of this script. You don't have to login with the root user
 #directly. The user does require the use of sudo.
 #
-#Copyright 2015 Jelle Derksen
+#Example
+# root # ./ssre.sh <script_you_want_to_execute_remote.sh>
+#
+#Copyright 2015 Jelle Derksen GNU GPL V3
 #Author Jelle Derksen
 #Contact jelled@jellederksen.nl
 #Website www.jellederksen.nl
 
-#Example
-# root # ./ssre.sh <script_you_want_to_execute_remote.sh>
-
+#Script settings change to suit your needs.
 ssh_user='systemadmin'
 remote_hosts[0]='192.168.0.1'
 remote_hosts[1]='192.168.0.2'
@@ -22,6 +23,7 @@ remote_hosts[2]='192.168.0.3'
 remote_hosts[3]='192.168.0.4'
 remote_hosts[4]='192.168.0.5'
 
+#Do not edit below this point.
 if [[ ! -r "$1" ]]; then
         echo "Enter the script name you want to execute." >&2
         exit 1
