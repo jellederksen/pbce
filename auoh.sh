@@ -23,7 +23,7 @@
 #exclude_hosts[1]='192.168.0.1'
 
 #Script settings change to suit your needs.
-users[0]="jelle,'Jelle Derksen',/home/jelle,/bin/ksh,jelle"
+users[0]=""
 exclude_hosts[0]=''
 
 #Do not edit below this point.
