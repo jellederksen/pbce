@@ -21,10 +21,15 @@
 #Example: exclude host from script.
 #exclude_hosts[0]='foo.bar.com'
 #exclude_hosts[1]='192.168.0.1'
+#
+#Example: exclude element on host from script.
+#exclude_element_on_host='foo.bar.com,users,1'
+#exclude_element_on_host='192.16.0.3,users,0'
 
 #Script settings change to suit your needs.
 users[0]=""
 exclude_hosts[0]=''
+exclude_element_on_host[0]=''
 
 #Do not edit below this point.
 #Script checks.
@@ -45,6 +50,19 @@ for host in "${exclude_hosts[@]}"; do
 		exit 0
 	fi
 done
+
+if [[ ! -z "$exclude_element_on_host" ]]; then
+	for x in exclude_element_on_host[@]; do
+		h="$(echo "$x" | awk -F, '{print $1}')"
+		a="$(echo "$x" | awk -F, '{print $2}')"
+		e="$(echo "$x" | awk -F, '{print $3}')"
+		if [[ "$(hostname)" = "$h" ]]; then
+			echo demo
+		else
+			echo demo
+		fi
+	done
+fi
 
 #Main code.
 for user in "${users[@]}"; do
