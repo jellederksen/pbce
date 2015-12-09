@@ -2,20 +2,24 @@
 #
 #Turn Daemon(s) On or Off
 #
+#Copyright 2015 Jelle Derksen GNU GPL V3
+#Author Jelle Derksen
+#Contact jelled@jellederksen.nl
+#Website www.jellederksen.nl
+#
 #All daemons in the array "$daemons[@]" will be configured to stop or
 #start at boot time depaning on the valua after the comma. This script will
 #look for the command line tool "update-rc.d" or "chkconfig" to configure
 #the desired state on the host this script is executed on. You can execte
 #this script on multiple systems using the ssre.sh script.
 #
-#Example
+#Example: turn daemons on or off at boot time.
 #daemons[0]='sshd,on'
 #daemons[0]='telnetd,off'
 #
-#Copyright 2015 Jelle Derksen GNU GPL V3
-#Author Jelle Derksen
-#Contact jelled@jellederksen.nl
-#Website www.jellederksen.nl
+#Example: exclude host from script.
+#exclude_hosts[0]='foo.bar.com'
+#exclude_hosts[1]='192.168.0.1'
 
 #Script settings change to suit your needs.
 daemons[0]='exim4,off'
