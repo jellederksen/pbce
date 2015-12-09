@@ -96,5 +96,5 @@ for x in "${user[@]}"; do
 	fi
 done
 
-echo "All keys are added to $(hostname)"
+echo "All keys are added to $(hostname)."
 exit 0
