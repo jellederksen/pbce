@@ -9,20 +9,22 @@
 #the quotes arround the full_name part. You will need the quotes when
 #using a space between the first and last name.
 #
+#Example
+#'group_name,full_name,home_directory,prefered_shell,account_name'
+#
 #Copyright 2016 Jelle Derksen
 #Author Jelle Derksen
 #Contact jelled@jellederksen.nl
 #Website www.jellederksen.nl
 
-#Example
-#'group_name,full_name,home_directory,prefered_shell,account_name'
+#Script settings edit to your needs.
+users[0]="jelle,'Jelle Derksen',/home/jelle,/bin/ksh,jelle"
 
+#Do not edit below this point.
 if [[ ! "$USER" = 'root' ]]; then
 	echo 'need root privileges'
 	exit 1
 fi
-
-users[0]="jelle,'Jelle Derksen',/home/jelle,/bin/ksh,jelle"
 
 for user in "${users[@]}"; do
 	g="$(echo $user | awk -F, '{print $1}')"
