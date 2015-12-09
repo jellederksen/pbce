@@ -48,7 +48,6 @@ if [[ -n "$exclude_hosts" ]]; then
 	done
 fi
 
-#Main code.
 if [[ -n "$exclude_element_on_host" ]]; then
 	for x in "${exclude_element_on_host[@]}"; do
 		h="$(echo "$x" | awk -F, '{print $1}')"
@@ -66,6 +65,7 @@ if [[ -n "$exclude_element_on_host" ]]; then
 	done
 fi
 
+#Main code.
 if [[ -x $(which update-rc.d) ]]; then
 	for d in "${daemons[@]}"; do
 		#name of init script
