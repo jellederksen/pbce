@@ -113,5 +113,5 @@ else
 	exit 1
 fi
 
-echo "Done changing init start/stop links on $(hostname)"
+echo "Done changing init start/stop links on $(hostname)."
 exit 0
