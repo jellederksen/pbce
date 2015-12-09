@@ -10,7 +10,8 @@
 #using a space between the first and last name.
 #
 #Example
-#'group_name,full_name,home_directory,prefered_shell,account_name'
+#users[0]="group_name,full_name,'home_directory',prefered_shell,account_name"
+#users[1]="jelle,'Jelle Derksen',/home/jelle,/bin/ksh,jelle"
 #
 #Copyright 2015 Jelle Derksen GNU GPL V3
 #Author Jelle Derksen
