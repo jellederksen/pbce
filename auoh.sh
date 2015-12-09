@@ -27,7 +27,7 @@
 #exclude_element_on_host='192.16.0.3,users,0'
 
 #Script settings change to suit your needs.
-users[0]=""
+users[0]="jelle,'Jelle Derksen',/home/jelle,/bin/ksh,jelle"
 exclude_hosts[0]=''
 exclude_element_on_host[0]=''
 
@@ -40,26 +40,33 @@ fi
 
 if [[ ! "$(uname)" = 'Linux' ]]; then
 	echo 'OS not Linux.'
-	exit 1
+	exit 2
 fi
 
-for host in "${exclude_hosts[@]}"; do
-	if [[ "$host" = "$(hostname)" ]]; then
-		exit 0
-	elif [[ "$host" = "$(ip addr show | grep -F -o "$host")" ]]; then
-		exit 0
-	fi
-done
+if [[ -n "$exclude_hosts" ]]; then
+	for x in "${exclude_hosts[@]}"; do
+		h="$(echo "$x" | awk -F, '{print $1}')"
+		if [[ "$h" = "$(hostname)" ]]; then
+			exit 0
+		elif [[ "$h" = "$(ip addr show | grep -F -o "$h")" ]]; then
+			exit 0
+		fi
+	done
+fi
 
-if [[ ! -z "$exclude_element_on_host" ]]; then
-	for x in exclude_element_on_host[@]; do
+if [[ -n "$exclude_element_on_host" ]]; then
+	for x in "${exclude_element_on_host[@]}"; do
 		h="$(echo "$x" | awk -F, '{print $1}')"
 		a="$(echo "$x" | awk -F, '{print $2}')"
 		e="$(echo "$x" | awk -F, '{print $3}')"
+		if [[ -z "$h" || -z "$a" || -z "$e" ]]; then
+			echo "$x variable incorrect"
+			exit 3
+		fi
 		if [[ "$(hostname)" = "$h" ]]; then
-			echo demo
-		else
-			echo demo
+			unset "${a}[${e}]"
+		elif [[ "$h" = "$(ip addr show | grep -F -o "$h")" ]]; then
+			unset "${a}[${e}]"
 		fi
 	done
 fi
@@ -73,7 +80,7 @@ for user in "${users[@]}"; do
 	a="$(echo $user | awk -F, '{print $5}')"
 	if [[ -z "$g" || -z "$n" || -z "$h" || -z "$s" || -z "$a" ]]; then
 		echo "$user variable incorrect."
-		exit 2
+		exit 4
 	fi
 	if id "$account" > /dev/null 2>&1; then
 		echo "$account already on $(hostname)."
@@ -83,7 +90,7 @@ for user in "${users[@]}"; do
 		echo "$account added on host $(hostname)."
 	else
 		echo "Failed to add $account on host $(hostname)."
-		exit 3
+		exit 5
 	fi
 done
 
