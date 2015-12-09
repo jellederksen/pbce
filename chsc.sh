@@ -26,6 +26,19 @@ if [[ ! "$USER" = 'root' ]]; then
 	exit 1
 fi
 
+if [[ ! "$(uname)" = 'Linux' ]]; then
+	echo 'OS not Linux.'
+	exit 1
+fi
+
+for host in "${exclude_hosts[@]}"; do
+	if [[ "$host" = "$(hostname)" ]]; then
+		exit 0
+	elif [[ "$host" = "$(ip addr show | grep "$host")" ]]; then
+		exit 0
+	fi
+done
+
 if [[ ! -f "$sysctl_conf" ]]; then
         echo "sysctl $sysctl_conf missing"
         exit 2
