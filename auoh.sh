@@ -12,7 +12,7 @@
 #Example
 #'group_name,full_name,home_directory,prefered_shell,account_name'
 #
-#Copyright 2016 Jelle Derksen
+#Copyright 2015 Jelle Derksen GNU GPL V3
 #Author Jelle Derksen
 #Contact jelled@jellederksen.nl
 #Website www.jellederksen.nl
