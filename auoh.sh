@@ -14,11 +14,11 @@
 #the quotes arround the full_name part. You will need the quotes when
 #using a space between the first and last name.
 #
-#Example add user accounts
+#Example add user accounts.
 #users[0]="group_name,full_name,'home_directory',prefered_shell,account_name"
 #users[1]="jelle,'Jelle Derksen',/home/jelle,/bin/ksh,jelle"
 #
-#Example exclude host from script
+#Example exclude host from script.
 #exclude_hosts[0]='foo.bar.com'
 #exclude_hosts[1]='192.168.0.1'
 
