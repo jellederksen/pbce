@@ -22,7 +22,8 @@
 #exclude_hosts[1]='192.168.0.1'
 
 #Script settings change to suit your needs.
-daemons[0]='exim4,off'
+daemons[0]=''
+exclude_hosts[0]=''
 
 #Do not edit below this point.
 if [[ ! "$USER" = 'root' ]]; then
