@@ -6,16 +6,20 @@
 #this script on multiple hosts with the use of the ssre.sh script. Please add
 #all sysctl settings you want to change to the "${sysctl_setting[@]}" array.
 #
-#Copyright 2016 Jelle Derksen
+#Example
+#sysctl_setting[0]='net.ipv4.conf.all.forwarding = 0'
+#
+#Copyright 2015 Jelle Derksen GNU GPL V3
 #Author Jelle Derksen
 #Contact jelled@jellederksen.nl
 #Website www.jellederksen.nl
 
-sysctl_conf='/etc/sysctl.conf'
-
+#Script settings change to suit your needs.
 sysctl_setting[0]='net.ipv4.conf.all.forwarding = 0'
 sysctl_setting[1]='net.ipv4.conf.all.forwarding = 1'
+sysctl_conf='/etc/sysctl.conf'
 
+#Do not edit below this point.
 if [[ ! "$USER" = 'root' ]]; then
 	echo 'need root privileges'
 	exit 1
