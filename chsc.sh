@@ -41,11 +41,6 @@ for host in "${exclude_hosts[@]}"; do
 	fi
 done
 
-if [[ ! "$(uname)" = 'Linux' ]]; then
-	echo 'OS not Linux.'
-	exit 1
-fi
-
 for host in "${exclude_hosts[@]}"; do
 	if [[ "$host" = "$(hostname)" ]]; then
 		exit 0
