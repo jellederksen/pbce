@@ -103,7 +103,7 @@ elif [[ -x "$(which chkconfig)" ]]; then
 			echo "${y}d ${x}."
 			continue
 		else
-			echo "failed to $x $y."
+			echo "failed to $x ${y}."
 			exit 2
 		fi
 	done
