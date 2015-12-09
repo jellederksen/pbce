@@ -20,10 +20,8 @@
 #exclude_hosts[1]='192.168.0.1'
 
 #Script settings change to suit your needs.
-sysctl_setting[0]='net.ipv4.conf.all.forwarding = 0'
-sysctl_setting[1]='net.ipv4.conf.all.forwarding = 1'
-exclude_hosts[0]='foo.bar.com'
-exclude_hosts[1]='192.168.0.1'
+sysctl_setting[0]=''
+exclude_hosts[0]=''
 sysctl_conf='/etc/sysctl.conf'
 
 #Do not edit below this point.
