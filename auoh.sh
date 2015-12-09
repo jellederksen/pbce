@@ -17,7 +17,7 @@
 #Example
 #'group_name,full_name,home_directory,prefered_shell,account_name'
 
-if [[ ! "$USER" = root ]]; then
+if [[ ! "$USER" = 'root' ]]; then
 	echo 'need root privileges'
 	exit 1
 fi
@@ -30,7 +30,7 @@ for user in "${users[@]}"; do
 	h="$(echo $user | awk -F, '{print $3}')"
 	s="$(echo $user | awk -F, '{print $4}')"
 	a="$(echo $user | awk -F, '{print $5}')"
-	if [[ -z $g || -z $n || -z $h || -z $s || -z $a ]]; then
+	if [[ -z "$g" || -z "$n" || -z "$h" || -z "$s" || -z "$a" ]]; then
 		echo "$user variable incorrect."
 		exit 2
 	fi
