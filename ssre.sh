@@ -12,14 +12,14 @@
 #first parameter of this script. You don't have to login with the root user
 #directly. The user does require the use of sudo.
 #
-#Example: add a host to remote_hosts array
+#Example: add a host to remote_hosts array.
 #remote_hosts[0]='192.168.0.1'
 #remote_hosts[1]='192.168.0.2'
 #remote_hosts[2]='192.168.0.3'
 #remote_hosts[3]='192.168.0.4'
 #remote_hosts[4]='192.168.0.5'
 #
-#Example: set username for ssh login
+#Example: set username for ssh login.
 #ssh_user='systemadmin'
 #
 #Example: execute script on remote hosts.
