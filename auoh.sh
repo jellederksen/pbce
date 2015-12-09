@@ -2,6 +2,11 @@
 #
 #Add Users On Host
 #
+#Copyright 2015 Jelle Derksen GNU GPL V3
+#Author Jelle Derksen
+#Contact jelled@jellederksen.nl
+#Website www.jellederksen.nl
+#
 #All users in the array "$users[@]" will be added to the host this
 #script is executed on. You can execute this script on multiple hosts
 #by executing this script with the ssre.sh script. The correct syntax
@@ -9,17 +14,17 @@
 #the quotes arround the full_name part. You will need the quotes when
 #using a space between the first and last name.
 #
-#Example
+#Example add user accounts
 #users[0]="group_name,full_name,'home_directory',prefered_shell,account_name"
 #users[1]="jelle,'Jelle Derksen',/home/jelle,/bin/ksh,jelle"
 #
-#Copyright 2015 Jelle Derksen GNU GPL V3
-#Author Jelle Derksen
-#Contact jelled@jellederksen.nl
-#Website www.jellederksen.nl
+#Example exclude host from script
+#exclude_hosts[0]='foo.bar.com'
+#exclude_hosts[1]='192.168.0.1'
 
 #Script settings change to suit your needs.
 users[0]="jelle,'Jelle Derksen',/home/jelle,/bin/ksh,jelle"
+exclude_hosts[0]=''
 
 #Do not edit below this point.
 if [[ ! "$USER" = 'root' ]]; then
