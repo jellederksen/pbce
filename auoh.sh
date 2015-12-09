@@ -17,7 +17,7 @@
 #Contact jelled@jellederksen.nl
 #Website www.jellederksen.nl
 
-#Script settings edit to your needs.
+#Script settings change to suit your needs.
 users[0]="jelle,'Jelle Derksen',/home/jelle,/bin/ksh,jelle"
 
 #Do not edit below this point.
