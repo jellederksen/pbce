@@ -18,6 +18,10 @@
 #Example: exclude host from script.
 #exclude_hosts[0]='foo.bar.com'
 #exclude_hosts[1]='192.168.0.1'
+#
+#Example: exclude element on host from script.
+#exclude_element_on_host='foo.bar.com,users,1'
+#exclude_element_on_host='192.16.0.3,users,0'
 
 #Script settings change to suit your needs.
 sysctl_setting[0]=''
