@@ -1,32 +1,5 @@
 #!/bin/bash
-#
-#Short Description Of Change
-#
-#Copyright 2015 Jelle Derksen GNU GPL V3
-#Author Jelle Derksen
-#Contact jelled@jellederksen.nl
-#Website www.jellederksen.nl
-#
-#Long description of change on the host this script is executed on.
-#
-#Example: exclude host from script.
-#exclude_hosts[0]='foo.bar.com'
-#exclude_hosts[1]='192.168.0.1'
-#
-#Example: exclude element on host from script.
-#exclude_element_on_host='foo.bar.com,users,1'
-#exclude_element_on_host='192.16.0.3,users,0'
-#
-#Example: array with change you want to make.
-#array_change[0]='Change you want to make.'
 
-#Script settings change to suit your needs.
-exclude_host[0]=''
-exclude_element_on_host[0]=''
-array_change[0]='Change you want to make.'
-
-#Do not edit below this point.
-#Script checks.
 if [[ ! "$USER" = 'root' ]]; then
 	echo 'need root privileges'
 	exit 1
@@ -64,10 +37,6 @@ if [[ -n "$exclude_element_on_host" ]]; then
 		fi
 	done
 fi
-
-#Main code.
-
-#Perform actions with elements in array_change.
 
 echo "Done making changes on $(hostname)."
 exit 0
