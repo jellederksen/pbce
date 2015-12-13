@@ -27,7 +27,7 @@
 #Script settings change to suit your needs.
 exclude_host[0]=''
 exclude_element_on_host[0]=''
-user_pubkey[0]="jelle,'ssh-dss AAAAB3NzaC1kc3MAAACBALZ7V+ZDVLq6hdDHHYTIOI7GxuyLcu7hsFk2yTjLDM5LDSyB5VWQ8LCMM3MDlBwka9d9vfGHwXpiRQC9keU6DWfm/y13Ai3JP3Jlg2uxwKULhpfgYK0cBjiCjk3Xu6K+s8/5JLis+tegcyNL8EUyBu1R+CjtsIaxuM4MmsMb/nw3AAAAFQDWO88a1NTWXGRUKZbOtsLWBW19uwAAAIBZL/6qomdviXE5jPqSXt4Eag64p+KgpqOd4vKD1B4MMWWVJFpM/BchsUb7K7/mowYJdmxqPgSXxkpoYX/+ko1pMN+OiZPPuuVSHP/3URiZ3v87yEfVO4HE95Yfakn0rQAxb97TKmA9RGNlT2wr0BUZ/IT7k7Z1w/IbbInWgYYcUgAAAIAkRSpEblFosE+LNycXQOeMIsC0j9ckSSOY9/97c/TifRxP45isbqJJMdi9Gvj/k4U5VcG1v+c/AIL7WuB01kf6C+IZdQlYHmSe/5V+J+1jgR+OpSSmHrnU6m4wyeT1s6C0+ngA0oBpqYTzMKFD0y2XgOkVO/0QqkADi8s5UTCx0A== jelled@thinkpad'"
+user_pubkey[0]=""
 
 #Do not edit below this point.
 #Script checks.
@@ -70,11 +70,14 @@ if [[ -n "$exclude_element_on_host" ]]; then
 fi
 
 #Main code.
-for x in "${user[@]}"; do
+for x in "${user_pubkey[@]}"; do
+	set -x
 	u="$(echo "$x" | awk -F, '{print $1}')"
 	k="$(echo "$x" | awk -F, '{print $2}')"
-	h="$(grep "$x" /etc/passwd | awk -F: '{print $6}')"
-	g="$(grep "$x" /etc/passwd | awk -F: '{print $4}')"
+	#Remove quotes arround public-key.
+	eval k="$k"
+	h="$(grep "$u" /etc/passwd | awk -F: '{print $6}')"
+	g="$(grep "$u" /etc/passwd | awk -F: '{print $4}')"
 	if [[ -z "$u" || -z "$k" || -z "$h" || -z "$g" ]]; then
 		echo "$x variable incorrect."
 		exit 4
@@ -83,16 +86,18 @@ for x in "${user[@]}"; do
 		echo "User $u does not exist."
 		continue
 	fi
-	if [[ ! -d "${u}" ]]
+	if [[ ! -d "${h}" ]]; then
 		echo "$u has no home directory."
 		exit 5
-	elif [[ ! -d "${u}/.ssh" ]]; then
-		mkdir "${u}/.ssh"
-		echo "$k" > "${u}/.ssh/authorized_keys"
-		chown -R "$u":"$g" "${u}/.ssh"
+	elif [[ ! -d "${h}/.ssh" ]]; then
+		mkdir "${h}/.ssh"
+		echo "#${u}'s SSH public-key" > "${h}/.ssh/authorized_keys"
+		echo "$k" >> "${h}/.ssh/authorized_keys"
+		chown -R "$u":"$g" "${h}/.ssh"
 	else
-		echo "$k" >> "${u}/.ssh/authorized_keys"
-		chown "$u":"$g" "${u}/.ssh/authorized_keys"
+		echo "#${u}'s SSH public-key" > "${h}/.ssh/authorized_keys"
+		echo "$k" >> "${h}/.ssh/authorized_keys"
+		chown "$u":"$g" "${h}/.ssh/authorized_keys"
 	fi
 done
 
