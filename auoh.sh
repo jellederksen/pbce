@@ -75,6 +75,8 @@ fi
 for u in "${user[@]}"; do
 	g="$(echo $u | awk -F, '{print $1}')"
 	n="$(echo $u | awk -F, '{print $2}')"
+	#Remove quotes around the user's full name.
+	eval n="$n"
 	h="$(echo $u | awk -F, '{print $3}')"
 	s="$(echo $u | awk -F, '{print $4}')"
 	a="$(echo $u | awk -F, '{print $5}')"
