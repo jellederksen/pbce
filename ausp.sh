@@ -22,7 +22,7 @@
 #exclude_element_on_host='192.16.0.3,users,0'
 #
 #Example: add public-key to users authorized_keys file.
-#user_pubkey[0]="user_name,'ssh_public_key'"
+#user_pubkey[0]="user_name,'ssh_public_key','ssh_public_key'"
 
 #Script settings change to suit your needs.
 exclude_host[0]=''
@@ -94,6 +94,11 @@ for x in "${user_pubkey[@]}"; do
 		echo "$k" >> "${h}/.ssh/authorized_keys"
 		chown -R "$u":"$g" "${h}/.ssh"
 	else
+		if grep -F "$k" "${h}/.ssh/authorized_keys" > \
+		/dev/null 2>&1; then
+			echo "Key for $u already in authorized_keys file."
+			continue
+		fi
 		echo "#${u}'s SSH public-key" >> "${h}/.ssh/authorized_keys"
 		echo "$k" >> "${h}/.ssh/authorized_keys"
 		chown "$u":"$g" "${h}/.ssh/authorized_keys"
