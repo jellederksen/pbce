@@ -32,7 +32,7 @@ ssh_user=''
 #Do not edit below this point.
 #Script checks.
 if [[ -z "$remote_host" || -z "$ssh_user" ]]; then
-	echo 'ssh_user and remote_host not set'
+	echo 'ssh_user or remote_host not set'
 	exit 1
 fi
 
