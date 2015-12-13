@@ -22,7 +22,7 @@
 #exclude_element_on_host='192.16.0.3,users,0'
 #
 #Example: add public-key to users authorized_keys file.
-#user_pubkey[0]="user_name,'ssh_public_key','ssh_public_key'"
+#user_pubkey[0]="user_name,'ssh_public_key'"
 
 #Script settings change to suit your needs.
 exclude_host[0]=''
