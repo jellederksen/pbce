@@ -1,5 +1,4 @@
-#Do not edit below this point.
-#Script checks.
+
 if [[ ! "$USER" = 'root' ]]; then
 	echo 'need root privileges'
 	exit 1
