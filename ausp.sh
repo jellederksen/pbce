@@ -71,7 +71,6 @@ fi
 
 #Main code.
 for x in "${user_pubkey[@]}"; do
-	set -x
 	u="$(echo "$x" | awk -F, '{print $1}')"
 	k="$(echo "$x" | awk -F, '{print $2}')"
 	#Remove quotes arround public-key.
