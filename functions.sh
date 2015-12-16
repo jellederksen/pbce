@@ -1,4 +1,9 @@
-#!/bin/bash
+#Functions for pbce scripts
+#
+#Copyright 2015 Jelle Derksen GNU GPL V3
+#Author Jelle Derksen
+#Contact jelled@jellederksen.nl
+#Website www.jellederksen.nl
 
 check_root() {
 	if [[ ! "$USER" = 'root' ]]; then
@@ -15,33 +20,35 @@ check_os() {
 }
 
 exclude_host() {
-	if [[ -n "$exclude_host" ]]; then
-		for x in "${exclude_host[@]}"; do
-			h="$(echo "$x" | awk -F, '{print $1}')"
-			if [[ "$h" = "$(hostname)" ]]; then
-				exit 0
-			elif [[ "$h" = "$(ip addr show | grep -F -o "$h")" ]]; then
-				exit 0
-			fi
-		done
+	if [[ -z "$exclude_host" ]]; then
+		return 0
 	fi
+	for x in "${exclude_host[@]}"; do
+		h="$(echo "$x" | awk -F, '{print $1}')"
+		if [[ "$h" = "$(hostname)" ]]; then
+			exit 0
+		elif [[ "$h" = "$(ip addr show | grep -F -o "$h")" ]]; then
+			exit 0
+		fi
+	done
 }
 
 exclude_element() {
-	if [[ -n "$exclude_element_on_host" ]]; then
-		for x in "${exclude_element_on_host[@]}"; do
-			h="$(echo "$x" | awk -F, '{print $1}')"
-			a="$(echo "$x" | awk -F, '{print $2}')"
-			e="$(echo "$x" | awk -F, '{print $3}')"
-			if [[ -z "$h" || -z "$a" || -z "$e" ]]; then
-				echo "$x variable incorrect"
-				exit 3
-			fi
-			if [[ "$(hostname)" = "$h" ]]; then
-				unset "${a}[${e}]"
-			elif [[ "$h" = "$(ip addr show | grep -F -o "$h")" ]]; then
-				unset "${a}[${e}]"
-			fi
-		done
+	if [[ "$exclude_element_on_host" ]]; then
+		return 0
 	fi
+	for x in "${exclude_element_on_host[@]}"; do
+		h="$(echo "$x" | awk -F, '{print $1}')"
+		a="$(echo "$x" | awk -F, '{print $2}')"
+		e="$(echo "$x" | awk -F, '{print $3}')"
+		if [[ -z "$h" || -z "$a" || -z "$e" ]]; then
+			echo "$x variable incorrect"
+			exit 3
+		fi
+		if [[ "$(hostname)" = "$h" ]]; then
+			unset "${a}[${e}]"
+		elif [[ "$h" = "$(ip addr show | grep -F -o "$h")" ]]; then
+			unset "${a}[${e}]"
+		fi
+	done
 }
