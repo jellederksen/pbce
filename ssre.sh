@@ -10,9 +10,9 @@
 #Execute a local script on multiple remote systems with the use of ssh. You
 #can specify the script you want to execute on the remote systems as the
 #first parameter of this script. You don't have to login with the root user
-#directly. The user does require the use of sudo.
+#directly. The ssh user does require the use of sudo.
 #
-#Example: add a host to remote_hosts array.
+#Example: add a hosts to remote_hosts array.
 #remote_host[0]='192.168.0.1'
 #remote_host[1]='192.168.0.2'
 #remote_host[2]='192.168.0.3'
@@ -26,10 +26,9 @@
 # root # ./ssre.sh <script_you_want_to_execute_remote.sh>
 
 #Script settings change to suit your needs.
-remote_host[0]=''
-ssh_user=''
+remote_host[0]='192.84.30.152'
+ssh_user='sysman'
 
-#Do not edit below this point.
 #Script checks.
 if [[ -z "$remote_host" || -z "$ssh_user" ]]; then
 	echo 'ssh_user or remote_host not set'
@@ -43,13 +42,23 @@ else
         base64_script="$(base64 -w0 "$1")"
 fi
 
+if [[ ! -r "$PWD/functions.sh" ]]; then
+	echo "Unable to read functions.sh file"
+	exit 3
+else
+	base64_functions="$(base64 -w0 "$PWD/functions.sh")"
+fi
+
+echo "${base64_functions}${base64_script}" | base64 -d | sed '/^#.*$/d' > total_script
+
 #Main code.
 for x in "${remote_host[@]}"; do
 	echo "Ssh to $remote_host and executing script $1."
 	ssh -o StrictHostKeyChecking=no "$ssh_user@$x" \
-"echo $base64_script | base64 -d | sudo bash"
+	"echo ${base64_functions}${base64_script} | \
+	base64 -d | sed '/^#.*$/d' | sudo bash"
 	if [[ ! "$?" -eq '0' ]]; then
-		echo "Someting went wrong on the host $x."
+		echo "Something went wrong on the host $x."
 		exit 3
 	fi
 done
