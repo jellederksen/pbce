@@ -1,13 +1,14 @@
 #!/bin/bash
-#Poor Basterds Command Executer
 #
 #Copyright 2015 Jelle Derksen GNU GPL V3
 #Author Jelle Derksen
 #Contact jelled@jellederksen.nl
 #Website www.jellederksen.nl
+#
+#Poor Basterds Command Executer execute connamds on remote Linux systems.
 
 #Script variables.
-pbce_dir='/home/jelle/software/pbce'
+pbce_dir='/home/l-fallback/jelle/pbce'
 fqdn_regex='^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$'
 ip_regex='^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
 
@@ -131,20 +132,18 @@ get_vars() {
 	fi
 }
 
-	
-
 execute_jobs() {
 	for h in "${hosts[@]}"; do
 		make_script "$h"
 		get_vars "$h"
-		ssh -o StrictHostKeyChecking=no "$sshuser@$hostname" \
+		echo "Working on $hostname"
+		ssh -q -o StrictHostKeyChecking=no "$sshuser@$hostname" \
 		echo "${final_script} | base64 -d | sudo bash"
 		if [[ ! $? -eq 0 ]]; then
-			echo "$me: Something went wrong on the host ${h}"
+			echo "$me: Something went wrong on host ${hostname}"
 			exit 99
 		fi
 	done
-	
 }
 
 #Main script.

@@ -1,5 +1,4 @@
 #!/bin/bash
-#Add User Ssh Public-key
 #
 #Copyright 2015 Jelle Derksen GNU GPL V3
 #Author Jelle Derksen
@@ -9,18 +8,18 @@
 #All public-keys in the "${user_pubkey[@]}" array will be added to the users
 #authorized_keys file on the host this script is executed on. The correct syntax
 #for the "$user_pubkey[@]" array can be found in the example. Please mind the 
-#quotes around the public-key part.
+#quotes around the public-key part. Add the user_pubkey array to the host config
+#file in de pbce hosts directory.
 #
-#Example: add public-key to users authorized_keys file.
+#Example user_pubkey array:
 #user_pubkey[0]="user_name,'ssh_public_key','ssh_public_key'"
 
-jobname='AddUserSshPublickey'
-jobgroup='ssh'
-jobdepends='AddUsersToHost'
+jobname='AddPubkey'
+jobgroup=''
+jobdepends=''
 
 add_pubkey() {
 	for x in "${user_pubkey[@]}"; do
-		echo debugdebug
 		u="$(echo "$x" | awk -F, '{print $1}')"
 		k="$(echo "$x" | awk -F, '{print $2}')"
 		#Remove quotes arround public-key.
@@ -54,13 +53,13 @@ add_pubkey() {
 			chown "$u":"$g" "${h}/.ssh/authorized_keys"
 		fi
 	done
+	echo "All keys are added to $(hostname)."
 }
 
 main() {
 	check_root
 	check_os
 	add_pubkey
-	echo "All keys are added to $(hostname)."
 	exit 0
 }
 
