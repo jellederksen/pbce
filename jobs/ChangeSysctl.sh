@@ -12,6 +12,10 @@ all sysctl settings you want to change to the "${sysctl_setting[@]}" array.
 #sysctl_setting[0]='net.ipv4.conf.all.forwarding = 0'
 #sysctl_setting[1]='net.ipv4.conf.all.forwarding = 1'
 
+jobname='ChangeSysctl'
+jobgroup=''
+jobdepends=''
+
 change_sysctl() {
 	for s in "${sysctl_setting[@]}"; do
 		conf="$(< "$sysctl_conf" grep "${s%% = [0-1]}")"

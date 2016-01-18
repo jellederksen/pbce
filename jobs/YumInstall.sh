@@ -12,6 +12,10 @@
 #Example: array with change you want to make.
 #yum_package[0]='vim'
 
+jobname='AddPubkey'
+jobgroup=''
+jobdepends=''
+
 yum_install() {
 	if [[ -n "$yum_package" && -x "$(which yum)" ]]; then
 		for x in "${yum_package[@]}"; do

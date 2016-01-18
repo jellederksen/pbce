@@ -14,6 +14,10 @@
 #daemon[0]='sshd,on'
 #daemon[0]='telnetd,off'
 
+jobname='DaemonOnoff'
+jobgroup=''
+jobdepends=''
+
 set_daemon() {
 	if [[ -x $(which update-rc.d) ]]; then
 		for d in "${daemon[@]}"; do

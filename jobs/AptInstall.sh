@@ -12,6 +12,10 @@
 #Example: array with change you want to make.
 #apt_package[0]='vim'
 
+jobname='AptInstall'
+jobgroup=''
+jobdepends=''
+
 apt_install() {
 	if [[ -n "$apt_package" && -x "$(which apt-get)" ]]; then
 		for x in "${apt_package[@]}"; do
