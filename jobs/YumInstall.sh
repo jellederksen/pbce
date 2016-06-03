@@ -12,18 +12,16 @@
 #Example: array with change you want to make.
 #yum_package[0]='vim'
 
-jobname='AddPubkey'
-jobgroup=''
-jobdepends=''
+jobname='YumInstall'
 
 yum_install() {
-	if [[ -n "$yum_package" && -x "$(which yum)" ]]; then
+	if [[ -n ${yum_package} && -x $(which yum) ]]; then
 		for x in "${yum_package[@]}"; do
-			if yum -y install "$x" > /dev/null 2>&1; then
-				echo "Installed package $x."
+			if yum -y install "${x}" > /dev/null 2>&1; then
+				echo "Installed package ${x}"
 				continue
 			else
-				echo "Failed to install package $x."
+				echo "Failed to install package ${x}"
 				exit 4
 			fi
 		done
@@ -31,7 +29,7 @@ yum_install() {
 		echo "No package to install or yum missing"
 		exit 5
 	fi
-	echo "Done installing packages on $(hostname)."
+	echo "Done installing packages on $(hostname)"
 }
 
 main() {
@@ -41,4 +39,4 @@ main() {
 	exit 0
 }
 
-main "$@"
+main "${@}"

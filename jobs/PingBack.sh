@@ -10,17 +10,13 @@
 #connectivity.
 
 jobname='PingBack'
-jobgroup=''
-jobdepends=''
 pingaddr="145.222.59.32"
 
 pingback() {
-	if /bin/ping -c 2 "$pingaddr"; then
+	if /bin/ping -c 2 "${pingaddr}"; then
 		echo "PingBack ok"
-		return 0
 	else
 		echo "PingBack failed"
-		return 0
 	fi
 }
 
@@ -31,4 +27,4 @@ main() {
 	exit 0
 }
 
-main "$@"
+main "${@}"

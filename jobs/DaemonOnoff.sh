@@ -15,52 +15,50 @@
 #daemon[0]='telnetd,off'
 
 jobname='DaemonOnoff'
-jobgroup=''
-jobdepends=''
 
 set_daemon() {
 	if [[ -x $(which update-rc.d) ]]; then
 		for d in "${daemon[@]}"; do
 			#name of init script
-			x="$(echo "$d" | awk -F, '{print $1}')"
+			x="$(echo "${d}" | cut -f 1 -d ',')"
 			#action enable or disable
-			y="$(echo "$d" | awk -F, '{print $2}' | \
+			y="$(echo "${d}" | cut -f 1 -d ',' | \
 			sed -e 's/on/enable/' -e 's/off/disable/')"
-			if [[ ! -f "/etc/init.d/$x" ]]; then
-				echo "Init script $x missing."
+			if [[ ! -f /etc/init.d/${x} ]]; then
+				echo "init script ${x} missing" >&2
 				exit 1
 			fi
-			if update-rc.d "$x" "$y"; then
-				echo "${y}d ${x}."
+			if update-rc.d "${x}" "${y}"; then
+				echo "${x} ${y}."
 				continue
 			else
-				echo "Failed to $x ${y}."
+				echo "Failed to ${x} ${y}." >&2
 				exit 2
 			fi
 		done
-	elif [[ -x "$(which chkconfig)" ]]; then
+	elif [[ -x $(which chkconfig) ]]; then
 		for d in "${daemon[@]}"; do
 			#name of init script
-			x="$(echo "$d" | awk -F, '{print $1}')"
+			x="$(echo "${d}" | cut -f 1 -d ',')"
 			#action on or off
-			y="$(echo "$d" | awk -F, '{print $2}')"
-			if [[ ! -f /etc/init.d/$x ]]; then
-				echo "Init script $x missing."
-				exit 1
+			y="$(echo "${d}" | cut -f 2 -d ',')"
+			if [[ ! -f /etc/init.d/${x} ]]; then
+				echo "init script ${x} missing" >&2
+				exit 3
 			fi
-			if chkconfig "$x" "$y"; then
-				echo "${y}d ${x}."
+			if chkconfig "${x}" "${y}"; then
+				echo "${x} ${y}."
 				continue
 			else
-				echo "failed to $x ${y}."
-				exit 2
+				echo "failed to ${x} ${y}." >&2
+				exit 4
 			fi
 		done
 	else
-		echo 'Update-rc.d and chkconfig not available.'
-		exit 1
+		echo 'update-rc.d and chkconfig not available' >&2
+		exit 5
 	fi
-	echo "Done changing init start/stop links on $(hostname)."
+	echo "done changing init start/stop links on $(hostname)"
 }
 
 main() {
@@ -70,6 +68,6 @@ main() {
 	exit 0
 }
 
-main "$@"
+main "${@}"
 
 exit 0
