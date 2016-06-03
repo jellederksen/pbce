@@ -5,7 +5,7 @@
 #Contact jelle@jellederksen.nl
 #Website www.jellederksen.nl
 #
-#Poor Basterds Command Executer execute connamds on remote Linux systems.
+#Poor Basterds Command Executer execute commands on remote Linux systems.
 
 #Script variables
 pbce_dir='/home/l-fallback/jelle/pbce'
@@ -57,14 +57,13 @@ check_host() {
 get_hosts() {
 	if [[ ${host} = all ]]; then
 		hosts=( $(grep -H -F 'hostname=' "${pbce_dir}"/hosts/*.conf | \
-		awk -F\: '{print $1}') )
+		cut -d':' -f 1) )
 	else
-		hosts=( $(grep -F -H "groupname='${host}'" \
-		"${pbce_dir}"/hosts/*.conf | awk -F\: '{print $1}') )
+		hosts=( $(grep -H -F "groupname='${host}'" \
+		"${pbce_dir}"/hosts/*.conf | cut -d':' -f 1) )
 		if [[ -z ${hosts} ]]; then
 			hosts=( $(grep -H -F "hostname='${host}'" \
-			"${pbce_dir}"/hosts/*.conf | \
-			awk -F\: '{print $1}') )
+			"${pbce_dir}"/hosts/*.conf | cut -d':' -f 1) )
 		fi
 	fi
 	if [[ -z ${hosts} ]]; then
@@ -72,14 +71,14 @@ get_hosts() {
 		exit 6
 	else
 		for h in "${hosts[@]}"; do
-			h="$(grep -F 'hostname=' "$h" | awk -F\' '{print $2}')"
+			h="$(grep -F 'hostname=' "$h" | cut -d"'" -f 2)"
 			check_host "${h}"
 		done
 	fi
 }
 
 check_job() {
-	job_type="$(file "${1}" | awk '{print $2}')"
+	job_type="$(file "${1}" | cut -d' ' -f 2)"
 	if [[ ${job_type} != Bourne-Again ]]; then
 		echo "${me}: ${1} not a Bourne-Again shell script" >&2
 		exit 7
@@ -87,8 +86,8 @@ check_job() {
 }
 
 get_job() {
-	job_name=$(grep -H -F "jobname='${job}'" \
-	"${pbce_dir}"/jobs/*.sh | awk -F\: '{print $1}')
+	job_name="$(grep -H -F "jobname='${job}'" \
+	"${pbce_dir}"/jobs/*.sh | cut -d':' -f 1)"
 	if [[ -z ${job_name} ]]; then
 		echo "${me}: no job found" >&2
 		exit 8
@@ -110,8 +109,8 @@ make_script() {
 }
 
 get_vars() {
-	sshuser="$(grep -F 'sshuser=' "${1}" | awk -F\' '{print $2}')"
-	hostname="$(grep -F 'hostname=' "${1}" | awk -F\' '{print $2}')"
+	sshuser="$(grep -F 'sshuser=' "${1}" | cut -d"'" -f 2)"
+	hostname="$(grep -F 'hostname=' "${1}" | cut -d"'" -f 2)"
 	if [[ -z ${sshuser} || -z ${hostname} ]]; then
 		echo "${me}: failed get hostname or sshuser from ${1}" >&2
 		exit 10
