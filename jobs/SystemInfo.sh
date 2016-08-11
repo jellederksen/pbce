@@ -47,7 +47,7 @@ net_info() {
 }
 
 user_info() {
-	OLD_IFS="$IFS"
+	OLD_IFS="${IFS}"
 	IFS=':'
 	i='0'
 	while read user x uid gid full_name home_dir shell; do
@@ -63,6 +63,7 @@ user_info() {
 			done <"${home_dir}/.ssh/authorized_keys"
 		fi
 	done <"${passwd_file}"
+	IFS="${OLD_IFS}"
 }
 
 daemon_info() {

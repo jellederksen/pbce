@@ -9,15 +9,13 @@
 #executed on.
 
 jobname='GetHostname'
-jobgroup=''
-jobdepends=''
 
 get_hostname() {
 	if echo "Hostname: $(/bin/hostname)"; then
 		return 0
 	else
 		echo "Failed to get hostname"
-		exit 1 
+		exit 1
 	fi
 }
 

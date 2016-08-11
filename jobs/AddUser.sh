@@ -6,7 +6,7 @@
 #Website www.jellederksen.nl
 #
 #All users in the array "$user[@]" will be added to the host this
-#script is executed on. The correct syntax for the "$user[@]" 
+#script is executed on. The correct syntax for the "$user[@]"
 #variable can be seen in the example. Please mind the quotes arround
 #the full_name part. You will need the quotes when using a space
 #between the first and last name.
@@ -20,13 +20,13 @@ me="$jobname"
 
 add_user() {
 	for u in "${user[@]}"; do
-		g="$(echo ${u} | cut -f 1 -d ',')"
-		n="$(echo ${u} | cut -f 2 -d ',')"
+		g="$(echo "${u}" | cut -f 1 -d ',')"
+		n="$(echo "${u}" | cut -f 2 -d ',')"
 		#Remove quotes around the user's full name
 		eval n="${n}"
-		h="$(echo ${u} | cut -f 3 -d ',')"
-		s="$(echo ${u} | cut -f 4 -d ',')"
-		a="$(echo ${u} | cut -f 5 -d ',')"
+		h="$(echo "${u}" | cut -f 3 -d ',')"
+		s="$(echo "${u}" | cut -f 4 -d ',')"
+		a="$(echo "${u}" | cut -f 5 -d ',')"
 		if [[ -z ${g} || -z ${n} || -z ${h} || -z ${s} || -z ${a} ]]; then
 			echo "${me}: ${u} variable incorrect" >&2
 			exit 1

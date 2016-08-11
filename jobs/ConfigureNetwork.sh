@@ -40,25 +40,26 @@ configure_fqdn () {
 configure_network() {
 	#Set and configure network interfaces
 	for i in "${network_interface[@]}"; do
-		while IFS=',' read -r if ip cidr; do
-			if ! ifconfig "$if" "${ip}/${cidr}" > /dev/null 2>&1;; then
-				echo "failed to configure interface ${if}"
+		while IFS=',' read -r nif ip cidr; do
+			if ! ifconfig "${nif}" "${ip}/${cidr}" > /dev/null 2>&1; then
+				echo "failed to configure interface ${nif}"
 				exit 2
 			fi
-			echo "DEVICE='${if}'" > "${conf_dir}/ifcfg-${if}"
-			echo "BOOTPROTO='none'" >> "${conf_dir}/ifcfg-${if}"
-			echo "ONBOOT='yes'" >> "${conf_dir}/ifcfg-${if}"
-			echo "PREFIX='${cidr}'" >> "${conf_dir}/ifcfg-${if}"
-			echo "IPADDR='${ip}'" >> "${conf_dir}/ifcfg-${if}"
+			echo "DEVICE='${nif}'" > "${conf_dir}/ifcfg-${nif}"
+			echo "BOOTPROTO='none'" >> "${conf_dir}/ifcfg-${nif}"
+			echo "ONBOOT='yes'" >> "${conf_dir}/ifcfg-${nif}"
+			echo "PREFIX='${cidr}'" >> "${conf_dir}/ifcfg-${nif}"
+			echo "IPADDR='${ip}'" >> "${conf_dir}/ifcfg-${nif}"
 		done <<< "${i}"
 	done
 	#Set and configure additional routes
 	for i in "${additional_route[@]}"; do
 		while IFS=',' read -r net cidr gw; do
-		if ! ip route add "${net}/${cidr}" via "${gw}"
-			echo "failed to add route"
-			exit 3
-		fi
+			if ! ip route add "${net}/${cidr}" via "${gw}"; then
+				echo "failed to add route"
+				exit 3
+			fi
+		done
 		gw_if="$(ip -o route get "${gw}" | cut -f 5 -d' ')"
 		echo "${net}/${cidr} via {$gw}" >> "${conf_dir}/route-${gw_if}"
 	done <<< "${i}"

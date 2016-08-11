@@ -41,7 +41,7 @@ add_pubkey() {
 			echo "#${u}'s SSH public-key" > \
 			"${h}/.ssh/authorized_keys"
 			echo "${k}" >> "${h}/.ssh/authorized_keys"
-			chown -R "${u}":"${g}" "${h}/.ssh"
+			chown -R "${u}:${g}" "${h}/.ssh"
 		else
 			if grep -F "${k}" "${h}/.ssh/authorized_keys" > \
 			/dev/null 2>&1; then

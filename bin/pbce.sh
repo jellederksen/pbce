@@ -97,7 +97,7 @@ get_job() {
 }
 
 make_script() {
-	config64="$(base64 -w0 ${1})"
+	config64="$(base64 -w0 "${1}")"
 	functions64="$(base64 -w0 "${pbce_dir}/functions/functions.sh")"
 	job64="$(base64 -w0 "${job_name}")"
 	if [[ -z ${config64} || -z ${functions64} || -z ${job_name} ]]; then
