@@ -25,20 +25,20 @@
 #
 #Configure networking on a Redhat 7 Linux-system
 
+#fqdn='hostname.domain.toplevel'
+#network_interface[0]='enp0s3,192.84.30.156,24,192.84.30.250'
+#network_interface[1]='enp0s8,192.0.2.2,24'
+#route[0]='enp0s8,192.0.3.0,24,192.0.2.1'
+#route[1]='enp0s8,192.0.4.0,24,192.0.2.1'
+#dns_server[0]='enp0s3,8.8.8.8'
+#dns_server[1]='enp0s3,8.8.4.4'
+
 shopt -s extglob
 jobname='ConfigureNetwork'
 conf_dir='/etc/sysconfig/network-scripts'
 resolv_conf='/etc/resolv.conf'
 net_conf='/etc/sysconfig/network'
 n=1
-
-fqdn='hostname.domain.toplevel'
-network_interface[0]='enp0s3,192.84.30.156,24,192.84.30.250'
-network_interface[1]='enp0s8,192.0.2.2,24'
-route[0]='enp0s8,192.0.3.0,24,192.0.2.1'
-route[1]='enp0s8,192.0.4.0,24,192.0.2.1'
-dns_server[0]='enp0s3,8.8.8.8'
-dns_server[1]='enp0s3,8.8.4.4'
 
 configure_fqdn () {
 	if ! hostnamectl set-hostname "${fqdn%%.*}"; then
