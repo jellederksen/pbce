@@ -40,7 +40,14 @@ resolv_conf='/etc/resolv.conf'
 net_conf='/etc/sysconfig/network'
 n=1
 
-configure_fqdn () {
+cleanup_conf() {
+	if ! rm "${conf_dir}"/ifcfg-!(lo) "${conf_dir}"/route-!(lo) > "${dn}" 2>&1; then
+		errmsg "failed to remove old network config files"
+		return 1
+	fi
+}
+
+configure_fqdn() {
 	if ! hostnamectl set-hostname "${fqdn%%.*}"; then
 		echo "failed to set hostname"
 		exit 99
@@ -49,10 +56,6 @@ configure_fqdn () {
 	echo "NETWORKING='yes'" >> "${net_conf}"
 	#We configure the fqdn when we configure
 	#the interface with the default gateway.
-}
-
-cleanup_conf() {
-	rm "${conf_dir}"/ifcfg-!(lo) "${conf_dir}"/route-!(lo) > /dev/null 2>&1
 }
 
 configure_network() {
