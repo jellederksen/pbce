@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Poor basterd command executer.
+#Poor bastard command executer.
 #
 #Version 0.1
 #
@@ -23,7 +23,7 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #SOFTWARE.
 #
-#Poor Basterds Command Executer execute jobs and commands on remote Linux systems.
+#Poor Bastard Command Executer execute jobs and commands on remote Linux systems.
 
 #Script variables
 pbce_dir='/home/l-fallback/jelle/pbce'
@@ -42,7 +42,7 @@ get_pars() {
 		usage
 		exit 2
 	else
-		while getopts Hh:j: n
+		while getopts Hh:j:c: n
 		do
 			case "${n}" in
 			H)
@@ -54,6 +54,9 @@ get_pars() {
 				;;
 			j)
 				job="${OPTARG}"
+				;;
+			c)
+				cmd="${OPTARG}"
 				;;
 			*)
 				help
@@ -118,11 +121,23 @@ make_script() {
 	config64="$(base64 -w0 "${1}")"
 	functions64="$(base64 -w0 "${pbce_dir}/functions/functions.sh")"
 	job64="$(base64 -w0 "${job_name}")"
-	if [[ -z ${config64} || -z ${functions64} || -z ${job_name} ]]; then
+	if [[ -z ${config64} || -z ${functions64} || -z ${job64} ]]; then
 		echo "${me}: failed to compile script" >&2
 		exit 9
 	else
 		final_script="${config64}${functions64}${job64}"
+	fi
+}
+
+make_cmd() {
+	config64="$(base64 -w0 "${1}")"
+	functions64="$(base64 -w0 "${pbce_dir}/functions/functions.sh")"
+	cmd64="$(echo "${cmd}" | base64 -w0)"
+	if [[ -z ${cmd64} || -z ${functions64} || -z ${cmd64} ]]; then
+		echo "${me}: failed to compile script" >&2
+		exit 9
+	else
+		final_script="${config64}${functions64}${cmd64}"
 	fi
 }
 
@@ -149,12 +164,30 @@ execute_job() {
 	done
 }
 
+execute_cmd() {
+	for h in "${hosts[@]}"; do
+		make_cmd "${h}"
+		get_vars "${h}"
+		echo "${me}: Working on ${hostname}"
+		ssh -q -o StrictHostKeyChecking=no "${sshuser}@${hostname}" \
+		echo "${final_script} | base64 -d | sudo bash"
+		if [[ ! ${?} -eq 0 ]]; then
+			echo "${me}: error on host ${hostname}" >&2
+			exit 11
+		fi
+	done
+}
+
 #Main script.
 main() {
 	get_pars "${@}"
 	get_hosts
-	get_job
-	execute_job
+	if [[ $cmd ]]; then
+		execute_cmd
+	else
+		get_job
+		execute_job
+	fi
 	exit 0
 }
 
