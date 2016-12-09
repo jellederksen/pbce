@@ -1,112 +1,82 @@
 #!/bin/bash
 #
-#Pbce jobs for configuring the network in Redhat.
-#
-#Version 0.1
-#
-#Copyright (c) 2016 Jelle Derksen jelle@epsilix.nl
-#Permission is hereby granted, free of charge, to any person obtaining a copy
-#of this software and associated documentation files (the "Software"), to deal
-#in the Software without restriction, including without limitation the rights
-#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-#copies of the Software, and to permit persons to whom the Software is
-#furnished to do so, subject to the following conditions:
-#
-#The above copyright notice and this permission notice shall be included in
-#all copies or substantial portions of the Software.
-#
-#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-#SOFTWARE.
+#Copyright 2015 Jelle Derksen GNU GPL V3
+#Author Jelle Derksen
+#Contact jelled@jellederksen.nl
+#Website www.jellederksen.nl
 #
 #Configure networking on a Redhat 7 Linux-system
 
-#fqdn='hostname.domain.toplevel'
-#network_interface[0]='enp0s3,192.84.30.156,24,192.84.30.250'
-#network_interface[1]='enp0s8,192.0.2.2,24'
-#route[0]='enp0s8,192.0.3.0,24,192.0.2.1'
-#route[1]='enp0s8,192.0.4.0,24,192.0.2.1'
-#dns_server[0]='enp0s3,8.8.8.8'
-#dns_server[1]='enp0s3,8.8.4.4'
-
-shopt -s extglob
 jobname='ConfigureNetwork'
 conf_dir='/etc/sysconfig/network-scripts'
 resolv_conf='/etc/resolv.conf'
 net_conf='/etc/sysconfig/network'
-n=1
+n='1'
 
-cleanup_conf() {
-	if ! rm "${conf_dir}"/ifcfg-!(lo) "${conf_dir}"/route-!(lo) > "${dn}" 2>&1; then
-		errmsg "failed to remove old network config files"
-		return 1
-	fi
-}
+#fqdn='hostname.domain.toplevel'
+#network_interface[0]='if_name,if_addr,cidr,default_gateway'
+#additional_route[0]='192.168.0.0,24,172.16.0.1'
+#additional_route[0]='145.222.132.0,24,10.117.144.65'
+#additional_route[1]='145.222.58.0,24,10.117.144.65'
+#additional_route[2]='145.222.59.0,24,10.117.144.65'
+#additional_route[3]='145.222.97.0,24,10.117.144.65'
+#additional_route[4]='145.222.98.0,24,10.117.144.65'
+#additional_route[5]='10.231.11.0,24,10.117.144.65'
+#additional_route[6]='145.222.16.132,32,10.117.144.65'
+#additional_route[7]='145.222.16.148,32,10.117.144.65'
+#dns_server[0]='1.2.3.4'
+#dns_server[1]='4.3.2.1'
 
-configure_fqdn() {
+configure_fqdn () {
 	if ! hostnamectl set-hostname "${fqdn%%.*}"; then
 		echo "failed to set hostname"
 		exit 99
 	fi
 	echo "NOZEROCONF='yes'" > "${net_conf}"
 	echo "NETWORKING='yes'" >> "${net_conf}"
-	#We configure the fqdn when we configure
-	#the interface with the default gateway.
+	echo "DOMAINNAME='${fqdn#*.}'" >> "${net_conf}"
 }
 
 configure_network() {
 	#Set and configure network interfaces
 	for i in "${network_interface[@]}"; do
-		while IFS=',' read -r nif ip cidr gw; do
-			if [[ $gw ]]; then
-				echo "DEVICE='${nif}'" > "${conf_dir}/ifcfg-${nif}"
-				echo "BOOTPROTO='none'" >> "${conf_dir}/ifcfg-${nif}"
-				echo "ONBOOT='yes'" >> "${conf_dir}/ifcfg-${nif}"
-				echo "PREFIX='${cidr}'" >> "${conf_dir}/ifcfg-${nif}"
-				echo "IPADDR='${ip}'" >> "${conf_dir}/ifcfg-${nif}"
-				echo "GATEWAY='${gw}'" >> "${conf_dir}/ifcfg-${nif}"
-				echo "DOMAIN='${fqdn#*.}'" >> "${conf_dir}/ifcfg-${nif}"
-			else
-				echo "DEVICE='${nif}'" > "${conf_dir}/ifcfg-${nif}"
-				echo "BOOTPROTO='none'" >> "${conf_dir}/ifcfg-${nif}"
-				echo "ONBOOT='yes'" >> "${conf_dir}/ifcfg-${nif}"
-				echo "PREFIX='${cidr}'" >> "${conf_dir}/ifcfg-${nif}"
-				echo "IPADDR='${ip}'" >> "${conf_dir}/ifcfg-${nif}"
+		while IFS=',' read -r nif ip cidr dgw; do
+			if [[ -z ${nif} || -z ${ip} || -z ${cidr} ]]; then
+				echo "variable incorrect"
+				exit 99
+			fi
+			echo "DEVICE='${nif}'" > "${conf_dir}/ifcfg-${nif}"
+			echo "BOOTPROTO='none'" >> "${conf_dir}/ifcfg-${nif}"
+			echo "ONBOOT='yes'" >> "${conf_dir}/ifcfg-${nif}"
+			echo "PREFIX='${cidr}'" >> "${conf_dir}/ifcfg-${nif}"
+			echo "IPADDR='${ip}'" >> "${conf_dir}/ifcfg-${nif}"
+			if [[ ${dgw} ]]; then
+				echo "GATEWAY='${dgw}'" >> "${conf_dir}/ifcfg-${nif}"
 			fi
 		done <<< "${i}"
 	done
-	#Set and configure routes
-	for i in "${route[@]}"; do
-		while IFS=',' read -r nif ip cidr gw; do
-			echo "${ip}/${cidr} via ${gw}" >> "${conf_dir}/route-${nif}"
-		done <<< "${i}"
+	#Set and configure additional routes
+	for i in "${additional_route[@]}"; do
+		while IFS=',' read -r net cidr gw; do
+			if [[ -z ${net} || -z ${cidr} || -z ${gw} ]]; then
+				echo "variable incorrect"
+				exit 99
+			fi
+			gw_if="$(ip -o route get "${gw}" | cut -d ' ' -f 3)"
+			echo "${net}/${cidr} via ${gw}" >> "${conf_dir}/route-${gw_if}"
+		done<<< "${i}"
 	done
 	#Set and configure the DNS servers
 	for i in "${dns_server[@]}"; do
-		while IFS=',' read -r nif dns_server; do
-			echo "DNS$((n++))='${dns_server}'" >> "${conf_dir}/ifcfg-${nif}"
-		done <<< "${i}"
+		echo "DNS$((n++))='${i}'" >> "${net_conf}"
 	done
-}
-
-restart_network() {
-	if ! systemctl restart network > /dev/null 2>&1; then
-		echo "failed to restart network"
-		exit 99
-	fi
 }
 
 main() {
 	check_root
 	check_os
-	cleanup_conf
 	configure_fqdn
 	configure_network
-	restart_network
 	exit 0
 }
 

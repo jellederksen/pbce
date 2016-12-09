@@ -42,7 +42,7 @@ get_pars() {
 		usage
 		exit 2
 	else
-		while getopts Hh:j:c: n
+		while getopts Hh:j:c:C n
 		do
 			case "${n}" in
 			H)
@@ -57,6 +57,10 @@ get_pars() {
 				;;
 			c)
 				cmd="${OPTARG}"
+				;;
+			C)
+				#create config file for host
+				config_menu='yes'
 				;;
 			*)
 				help
@@ -154,12 +158,13 @@ execute_job() {
 	for h in "${hosts[@]}"; do
 		make_script "${h}"
 		get_vars "${h}"
-		echo "${me}: Working on ${hostname}"
+		echo "${me}: Working on ${hostname}" >&2
 		ssh -q -o StrictHostKeyChecking=no "${sshuser}@${hostname}" \
 		echo "${final_script} | base64 -d | sudo bash"
 		if [[ ! ${?} -eq 0 ]]; then
-			echo "${me}: error on host ${hostname}" >&2
-			exit 11
+			#echo "${me}: error on host ${hostname}" >&2
+			echo "${me}: unable to login to host ${hostname}" >&2
+			#exit 11
 		fi
 	done
 }
@@ -168,7 +173,7 @@ execute_cmd() {
 	for h in "${hosts[@]}"; do
 		make_cmd "${h}"
 		get_vars "${h}"
-		echo "${me}: Working on ${hostname}"
+		echo "${me}: Working on ${hostname}" >&2
 		ssh -q -o StrictHostKeyChecking=no "${sshuser}@${hostname}" \
 		echo "${final_script} | base64 -d | sudo bash"
 		if [[ ! ${?} -eq 0 ]]; then
@@ -178,9 +183,139 @@ execute_cmd() {
 	done
 }
 
+#pbce host config file functions
+
+add_ssh_key () {
+	for i in "${hosts[@]}"; do
+		source "${i}"
+		#Put all index numbers of user_pubkey array
+		#in next_index array.
+		next_index=(${!user_pubkey[@]})
+		#Get highest number from next_index array
+		#and put it in next_index variable.
+		next_index=${next_index[@]: -1}
+		#Increment next_index number by 1 so we can
+		#use it to any a new element to the array in
+		#the config file hostname.conf
+		((next_index++))
+		echo "user_pubkey[$next_index]=\"${username},'$ssh_pubkey'\"" >> "${i}"
+		#unset the user_pubkey array for the next iteration
+		unset user_pubkey
+	done
+}
+
+add_user () {
+	for i in "${hosts[@]}"; do
+		source "${i}"
+		#Put all index numbers of user array
+		#in next_index array.
+		next_index=(${!user[@]})
+		#Get highest number from next_index array
+		#and put it in next_index variable.
+		next_index=${next_index[@]: -1}
+		#Increment next_index number by 1 so we can
+		#use it to any a new element to the array in
+		#the config file hostname.conf
+		((next_index++))
+		echo "user[$next_index]=\"${username},'${fullname}',$homedir,$shell,$username\"" >> "${i}"
+		#unset the user array for the next iteration
+		unset user
+	done
+}
+
+menu_manage_users () {
+	PS3='Please enter your choice: '
+	options=( 'add user' 'remove user' 'exit' )
+	select opt in "${options[@]}"; do
+		case "$opt" in
+		'add user')
+			echo -n "enter username: "
+			read username
+			echo -n "enter fullname: "
+			read fullname
+			[[ $fullname ]] || fullname="${username}"
+			echo -n "enter homedir: "
+			read homedir
+			[[ $homedir ]] || homedir="/home/${username}"
+			echo -n "enter shell: "
+			read shell
+			[[ $shell ]] || shell='/bin/bash'
+			echo -n "enter hostname: "
+			read host
+			get_hosts
+			add_user
+			exit 0
+		;;
+		'remove user')
+			echo -n "enter username: "
+			read username
+		;;
+		exit)
+			exit 99
+		;;
+		esac
+	done
+}
+
+menu_manage_sshkeys () {
+	PS3='Please enter your choice: '
+	options=( 'add ssh key' 'remove ssh key' 'exit' )
+	select opt in "${options[@]}"; do
+		case "$opt" in
+		'add ssh key')
+			echo -n "enter username: "
+			read username
+			echo -n "enter ssh public key: "
+			read ssh_pubkey
+			echo -n "enter hostname: "
+			read host
+			get_hosts
+			add_ssh_key
+			exit 0
+		;;
+		'remove ssh key')
+			echo -n "enter host or group name: "
+			read i
+			echo -n "enter username: "
+			read u
+		;;
+		exit)
+			exit 99
+		;;
+		esac
+	done
+}
+
+main_config_menu () {
+	PS3='Please enter your choice: '
+	options=( 'create host' 'manage users' 'manage ssh keys' 'exit' )
+	select opt in "${options[@]}"; do
+		case "$opt" in
+		'create host')
+			echo 'option 1'
+		;;
+		'manage users')
+			menu_manage_users
+		;;
+		'manage ssh keys')
+			menu_manage_sshkeys
+		;;
+		'exit')
+			exit 99
+		;;
+		*)
+			echo 'Invalid option'
+		;;
+		esac
+	done
+}
+
 #Main script.
 main() {
 	get_pars "${@}"
+	if [[ $config_menu ]]; then
+		main_config_menu
+	fi
 	get_hosts
 	if [[ $cmd ]]; then
 		execute_cmd
