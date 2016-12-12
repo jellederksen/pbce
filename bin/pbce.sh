@@ -26,7 +26,7 @@
 #Poor Bastard Command Executer execute jobs and commands on remote Linux systems.
 
 #Script variables
-pbce_dir='/home/l-fallback/jelle/pbce'
+pbce_dir='/home/jelled/github/pbce/bin'
 fqdn_regex='^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$'
 ip_regex='^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
 me="${0##*/}"
@@ -185,7 +185,7 @@ execute_cmd() {
 
 #pbce host config file functions
 
-add_ssh_key () {
+add_ssh_key() {
 	for i in "${hosts[@]}"; do
 		source "${i}"
 		#Put all index numbers of user_pubkey array
@@ -204,7 +204,7 @@ add_ssh_key () {
 	done
 }
 
-add_user () {
+add_user() {
 	for i in "${hosts[@]}"; do
 		source "${i}"
 		#Put all index numbers of user array
@@ -223,7 +223,7 @@ add_user () {
 	done
 }
 
-menu_manage_users () {
+menu_manage_users() {
 	PS3='Please enter your choice: '
 	options=( 'add user' 'remove user' 'exit' )
 	select opt in "${options[@]}"; do
@@ -257,7 +257,7 @@ menu_manage_users () {
 	done
 }
 
-menu_manage_sshkeys () {
+menu_manage_sshkeys() {
 	PS3='Please enter your choice: '
 	options=( 'add ssh key' 'remove ssh key' 'exit' )
 	select opt in "${options[@]}"; do
@@ -286,13 +286,41 @@ menu_manage_sshkeys () {
 	done
 }
 
-main_config_menu () {
+menu_manage_host() {
 	PS3='Please enter your choice: '
-	options=( 'create host' 'manage users' 'manage ssh keys' 'exit' )
+	options=( 'create host' 'remove host' 'disable host' 'enable host' 'exit' )
 	select opt in "${options[@]}"; do
 		case "$opt" in
 		'create host')
-			echo 'option 1'
+			echo 'create host'
+			exit 0
+		;;
+		'remove host')
+			echo 'remove host'
+			exit 0
+		;;
+		'disable host')
+			echo 'disable host'
+			exit 0
+		;;
+		'enable host')
+			echo 'enable host'
+			exit 0
+		;;
+		'exit')
+			exit 99
+		;;
+		esac
+	done
+}
+
+main_config_menu () {
+	PS3='Please enter your choice: '
+	options=( 'manage host' 'manage users' 'manage ssh keys' 'exit' )
+	select opt in "${options[@]}"; do
+		case "$opt" in
+		'manage host')
+			menu_manage_host
 		;;
 		'manage users')
 			menu_manage_users
